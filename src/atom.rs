@@ -1,18 +1,32 @@
 use crate::term::Term;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Atom {
-    name: String,
-    params: Vec<Term>,
+    pub functor: String,
+    pub params: Vec<Term>,
 }
 
 impl Atom {
+    pub fn apply(&self, f: &dyn Fn(&Term) -> Term) -> Self {
+        Atom {
+            functor: self.functor.clone(),
+            params: self.params.iter().map(|term| term.apply(f)).collect()
+        }
+    }
+
+    pub fn apply_on_elements(&self, f: &dyn Fn(&Term) -> Term) -> Self {
+        Atom {
+            functor: self.functor.clone(),
+            params: self.params.iter().map(|term| term.apply_on_elements(f)).collect()
+        }
+    }
+    
     pub fn new(name: String, params: Vec<Term>) -> Self {
-        Atom { name, params }
+        Atom { functor: name, params }
     }
 
     pub fn matching(lhs: &Atom, rhs: &Atom) -> bool {
-        if lhs.name != rhs.name || lhs.params.len() != rhs.params.len() {
+        if lhs.functor != rhs.functor || lhs.params.len() != rhs.params.len() {
             return false
         }
         for i in 0..lhs.params.len() {
@@ -21,6 +35,10 @@ impl Atom {
             }
         }
         true
+    }
+
+    pub fn get_params(&self) -> &Vec<Term> {
+        &self.params
     }
 }
 

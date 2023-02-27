@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Clone )]
 pub enum Term {
     NumCst(i32),
     StrCst(String),
@@ -10,6 +10,23 @@ pub enum Term {
 }
 
 impl Term {
+    pub fn apply(&self, f: &dyn Fn(&Self) -> Self) -> Self {
+        f(self)
+    }
+
+    pub fn apply_on_elements(&self, f: &dyn Fn(&Self) -> Self) -> Self {
+        // Apply some function f, on term elements: NumCst, StrCst, Variable
+        match self {
+            Term::Function { functor, params } => {
+                Term::Function {
+                    functor: functor.clone(), 
+                    params: params.iter().map(|term| f(term)).collect(),
+                }
+            },
+            _ => f(self),
+        }
+    }
+
     pub fn matching(lhs: &Term, rhs: &Term) -> bool {
         match (lhs, rhs) {
             (Term::Variable(_), _) => true,

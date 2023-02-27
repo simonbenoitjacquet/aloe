@@ -1,21 +1,41 @@
 use crate::atom::Atom;
+use crate::term::Term;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Predicate {
-    lhs: Atom,
-    rhs: Vec<Atom>,
+    pub head: Atom,
+    pub body: Vec<Atom>,
 }
 
 impl Predicate {
-    pub fn new(lhs: Atom, rhs:Vec<Atom>) -> Self {
-        Predicate { lhs, rhs }
+    pub fn apply(&self, f: &dyn Fn(&Term) -> Term) -> Self {
+        Predicate {
+            head: self.head.apply(f),
+            body: self.body.iter().map(|atom| atom.apply(f)).collect()
+        }
     }
+    
+    pub fn apply_on_elements(&self, f: &dyn Fn(&Term) -> Term) -> Self {
+        Predicate {
+            head: self.head.apply_on_elements(f),
+            body: self.body.iter().map(|atom| atom.apply_on_elements(f)).collect()
+        }
+    }
+    
+    pub fn new(head: Atom, body:Vec<Atom>) -> Self {
+        Predicate { head, body }
+    }
+
+    pub fn matching_head(&self, atom: &Atom) -> bool {
+        Atom::matching(&self.head, &atom)
+    }
+
     pub fn matching(lhs: &Predicate, rhs: &Predicate) -> bool {
-        if ! Atom::matching(&lhs.lhs, &rhs.lhs) || lhs.rhs.len() != rhs.rhs.len() {
+        if ! Atom::matching(&lhs.head, &rhs.head) || lhs.body.len() != rhs.body.len() {
             return false
         }
-        for i in 0..lhs.rhs.len() {
-            if ! Atom::matching(&lhs.rhs[i], &rhs.rhs[i]) {
+        for i in 0..lhs.body.len() {
+            if ! Atom::matching(&lhs.body[i], &rhs.body[i]) {
                 return false
             }
         }
