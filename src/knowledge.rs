@@ -4,14 +4,15 @@ use crate::predicate::Predicate;
 use crate::substitution::Substitution;
 
 pub struct Knowledge {
-    clauses: Vec<Predicate>
+    pub clauses: Vec<Predicate>
 }
 
 impl Knowledge {
     pub fn new() -> Self { Knowledge { clauses: vec![] } }
 
-    pub fn add(&mut self, predicate: &Predicate){
+    pub fn add(&mut self, predicate: &Predicate) -> &Self {
         self.clauses.push(predicate.clone());
+        self
     }
 
     pub fn get_clauses(&self) -> &Vec<Predicate>{

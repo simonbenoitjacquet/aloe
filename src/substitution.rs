@@ -4,7 +4,7 @@ use crate::atom::Atom;
 use crate::predicate::Predicate;
 use crate::utils::*;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Substitution {
     data: HashMap<String, Term>,
 }
