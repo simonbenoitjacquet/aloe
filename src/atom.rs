@@ -48,19 +48,22 @@ mod tests {
 
     #[test]
     fn test_matching_1() {
-        let atom1 = Atom::new (
-            String::from("a"),
-            Vec::new(),
-        );
-        let atom2 = Atom::new (
-            String::from("a"),
-            vec![
-                Term::Function{
-                    functor: String::from("fun"),
-                    params: vec![Term::StrCst(String::from("age"))],
-                }
-            ],
-        );
+        let term1 = Term::Function {
+            functor: String::from("fun2"),
+            params: vec![Term::StrCst(String::from("age"))],
+        };
+        let term2 = Term::Function {
+            functor: String::from("fun"),
+            params: vec![ term1 ],
+        };
+        let atom1 = Atom {
+            functor: String::from("a"),
+            params: vec![],
+        };
+        let atom2 = Atom {
+            functor: String::from("a"),
+            params: vec![ term2 ],
+        };
         assert!(Atom::matching(&atom1, &atom1));
         assert!(Atom::matching(&atom2, &atom2));
         assert!(!Atom::matching(&atom1, &atom2));

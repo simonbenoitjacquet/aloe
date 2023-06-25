@@ -23,21 +23,21 @@ fn main() {
         params: Vec::new(),
     };
 
-    let pred = Predicate::new (
-        Atom::new (
+    let pred = Predicate {
+        head: Atom::new (
             String::from("bob"),
             vec![ 
-            Term::NumCst(3), 
-            Term::StrCst(String::from("age")), 
-            Term::Variable(String::from("age")), 
-            Term::Function{
-                functor: String::from("fun"),
-                params: Vec::new(),
-            },
-            ]
+                Term::NumCst(3), 
+                Term::StrCst(String::from("age")), 
+                Term::Variable(String::from("age")), 
+                Term::Function {
+                    functor: String::from("fun"),
+                    params: vec![],
+                },
+            ],
         ),
-        Vec::new(),
-    );
+        body: vec![],
+    };
 
     println!("{}", Term::matching(&fun, &fun2));
     println!("{}", Term::matching(&fun2, &fun2));
