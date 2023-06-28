@@ -10,7 +10,7 @@ pub struct Knowledge {
 impl Knowledge {
     pub fn new() -> Self { Knowledge { clauses: vec![] } }
 
-    pub fn add(&mut self, predicate: &Predicate) -> &Self {
+    pub fn add(&mut self, predicate: Predicate) -> &Self {
         self.clauses.push(predicate.clone());
         self
     }

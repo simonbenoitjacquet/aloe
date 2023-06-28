@@ -38,7 +38,6 @@ pub fn query(fact: &Atom, knowledge: &Knowledge) -> Option<Vec<Substitution>> {
             None => {
                 // When there are no fact to query, we found ourselves a solution
                 solutions.push(substitution);
-                println!("Found");
                 continue
             },
             Some(fact) => fact,
@@ -53,14 +52,12 @@ pub fn query(fact: &Atom, knowledge: &Knowledge) -> Option<Vec<Substitution>> {
                 Err(_) => continue,
                 Ok(returned_subst) => returned_subst,
             };
-            println!("{:?}", returned_subst);
 
             // Merge all substitutions
             let mut new_subst = substitution.clone();
             if let Err(_) = new_subst.merge(&returned_subst) {
                 continue
             };
-            println!("{:?}", new_subst);
 
             // Apply substitution on query and on p.body
             let mut new_query: VecDeque<Atom> = query.iter().map(|x| new_subst.apply_on_atom(x)).collect();
@@ -68,8 +65,6 @@ pub fn query(fact: &Atom, knowledge: &Knowledge) -> Option<Vec<Substitution>> {
                 new_query.push_back(atom);
             }
 
-            println!("{:?}", query);
-            println!("{:?}", &new_query);
             // Add new state
             states.push_front(State { query: new_query, substitution: new_subst, depth: depth+1 });
         }
