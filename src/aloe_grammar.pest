@@ -1,0 +1,9 @@
+name = @{ ASCII_ALPHA+ }
+variable = @{ ASCII_ALPHA_UPPER+ }
+numcst = @{ ASCII_DIGIT+ }
+strcst = @{ ASCII_ALPHA_LOWER+ }
+
+function = { name ~ "(" ~ (term ~ ("," ~ term)*)? ~ ")" }
+term = { function | variable | strcst | numcst }
+atom = { name ~ "(" ~ term ~ ("," ~ term)* ~ ")" }
+predicate = { atom ~ (":-" ~ atom ~ ("," ~ atom)*)? ~ "." }

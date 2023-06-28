@@ -129,6 +129,18 @@ impl Substitution {
             body: predicate.body.iter().map(|t| self.apply_on_atom(t)).collect(),
         }
     }
+
+    pub fn get_fn_rename_variables(depth: u32) -> Box<dyn Fn(&Term) -> Term> {
+        Box::new(move |term: &Term| {
+            match term {
+                Term::Variable(name) => {
+                    let new_name: String = format!("{}_{}", name.clone(), depth);
+                    Term::Variable(new_name)
+                },
+                _ => return term.clone(), 
+            }
+        })
+    }
 }
 
 
